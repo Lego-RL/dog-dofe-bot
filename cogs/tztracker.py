@@ -27,7 +27,6 @@ class TZTracker(commands.Cog):
         utc = arrow.utcnow()
 
         # only update twice an hour
-        print(str(utc.to(self.timezones["CST"]).format("mm")))
         if str(utc.to(self.timezones["CST"]).format("mm")) not in ["00", "30"]:
             return
 

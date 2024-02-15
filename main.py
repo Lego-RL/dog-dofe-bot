@@ -7,8 +7,7 @@ load_dotenv()
 config: dict = dotenv_values(".env")
 
 bot = discord.Bot()
-# extensions: list[str] = ["rpg", "tztracker"]
-extensions: list[str] = ["rpg"]
+extensions: list[str] = ["rpg", "tztracker"]
 
 for extension in extensions:
     bot.load_extension(f"cogs.{extension}")

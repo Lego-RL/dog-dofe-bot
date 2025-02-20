@@ -165,6 +165,39 @@ class RPG(commands.Cog):
         )
 
 
+    @inventory.command()
+    async def wipe(
+        self,
+        ctx: discord.ApplicationContext,
+        user: Option(discord.Member, "User whose inventory to wipe")
+    ):
+        """Resets the specified user's inventory."""
+        if ctx.user.id != 482764335693955082:
+            await ctx.respond("You do not wield authority to wipe someone's inventory.")
+            return
+        file_name = "data.json"
+        try:
+            with open(file_name, "r") as f:
+                data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = {}
+
+        # Ensure the nested structure exists.
+        if "rpg" not in data or "inventory" not in data["rpg"]:
+            await ctx.respond("No inventory data found.")
+            return
+
+        user_id = str(user.id)
+        if user_id in data["rpg"]["inventory"]:
+            # Remove the user's inventory.
+            data["rpg"]["inventory"].pop(user_id)
+            with open(file_name, "w") as f:
+                json.dump(data, f, indent=4)
+            await ctx.respond(f"{user.display_name}'s inventory has been wiped.")
+        else:
+            await ctx.respond(f"{user.display_name} doesn't have an inventory to wipe.")
+
+
     @commands.Cog.listener()
     async def on_ready(self):
         # self.bot.add_application_command(setcmd)
